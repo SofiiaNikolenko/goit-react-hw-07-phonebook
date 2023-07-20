@@ -1,24 +1,24 @@
 import React from 'react';
 import { ContactItem } from './ContactItem/ContactItem';
 import { useSelector } from 'react-redux';
-import { getContacts } from '../../redux/contactsSlice';
-import { getStatusFilter } from '../../redux/filterSlice';
+import { contactsSelector, filterSelector } from '../../redux/selectors';
 
 function ContactList() {
-  const contacts = useSelector(getContacts);
-  const filter = useSelector(getStatusFilter);
+  const contacts = useSelector(contactsSelector);
+  const filter = useSelector(filterSelector);
 
-  function findContacts() {
-    return contacts.filter(({ name }) =>
-      name.toUpperCase().includes(filter.toUpperCase())
-    );
-  }
+  const currentContacts = contacts.filter(({ name }) =>
+    name.toUpperCase().includes(filter.toUpperCase())
+  );
 
   return (
     <>
-      {findContacts().map(({ id, name, number }) => {
-        return <ContactItem key={id} id={id} name={name} number={number} />;
-      })}
+      {contacts.length > 0 &&
+        currentContacts.map(({ id, name, phone }) => {
+          return (
+            <ContactItem key={Number(id)} id={id} name={name} number={phone} />
+          );
+        })}
     </>
   );
 }
